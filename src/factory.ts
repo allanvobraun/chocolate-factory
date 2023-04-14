@@ -1,4 +1,5 @@
 import { EntityTarget, ObjectLiteral } from 'typeorm';
+import { range } from './util';
 
 type Constructor<T> = new (...args: any[]) => T;
 export const ENTITY_METADATA_KEY = 'CF:ENTITY_METADATA_KEY';
@@ -12,7 +13,6 @@ export function FactoryFor<Entity extends ObjectLiteral>(entity: EntityTarget<En
 export type StateFn<T> = (attributes: Partial<T>) => Partial<T>;
 export abstract class Factory<T> {
   private states: StateFn<T>[] = [];
-  private _count: number = 0;
 
   protected abstract definition(): Partial<T>;
 
@@ -21,18 +21,14 @@ export abstract class Factory<T> {
       return this.state(state).make();
     }
 
-    if (this._count === 0) {
-      return this.getRawAttributes();
-    }
-
-    return this.getRawAttributes(); // TODO implement range
+    return this.getRawAttributes();
   }
 
-  count(times: number) {
-    if (times < 0) {
-      throw new Error(`Times must be greater than 0, ${times} recived`);
+  makeMany(count: number, state?: Partial<T>): Partial<T>[] {
+    if (count < 0) {
+      throw new Error(`Times must be greater than 0, ${count} recived`);
     }
-    this._count = times;
+    return range(0, count).map(() => this.make(state));
   }
 
   state(state: StateFn<T> | Partial<T>): Factory<T> {

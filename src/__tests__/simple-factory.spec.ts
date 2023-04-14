@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import 'reflect-metadata';
 
 import { describe, expect, expectTypeOf, it } from 'vitest';
@@ -81,5 +82,47 @@ describe('simple factory tests', () => {
       }))
       .make();
     expect(instance.name).toBe('hersheys');
+  });
+
+  it('makeMany works', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instances = chocolateManufacturerFactory
+      .state(() => ({
+        name: 'wonka',
+      }))
+      .state(() => ({
+        name: 'toblerone',
+      }))
+      .state(() => ({
+        name: 'hersheys',
+      }))
+      .makeMany(10);
+    expect(instances).toHaveLength(10);
+    instances.forEach(instance => {
+      expect(instance.name).toBe('hersheys');
+    });
+  });
+
+  it('makeMany mantain randoness', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instances = chocolateManufacturerFactory
+      .state(() => ({
+        name: 'wonka ' + faker.random.alpha(4),
+      }))
+      .makeMany(10);
+    expect(instances).toHaveLength(10);
+    const set = new Set(instances.map(item => item.name));
+    expect(set).toHaveLength(instances.length);
+  });
+
+  it('makeMany state works', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instances = chocolateManufacturerFactory.makeMany(10, {
+      name: 'wonka',
+    });
+    expect(instances).toHaveLength(10);
+    instances.forEach(instance => {
+      expect(instance.name).toBe('wonka');
+    });
   });
 });
