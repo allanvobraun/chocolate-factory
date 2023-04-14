@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { ChocolateManufacturerFactory } from './chocolate-manufacturer.factory';
+import {
+  ChocolateManufacturerFactory,
+  COMPANY_NAME,
+} from './chocolate-manufacturer.factory';
 
 describe('simple factory tests', () => {
   it('make works', () => {
@@ -17,19 +20,51 @@ describe('simple factory tests', () => {
         name: 'wonka',
       }))
       .make();
-    expectTypeOf(instance.name as string).toBeString();
     expect(instance.name).toBe('wonka');
   });
 
-  it('state works without callbak', () => {
+  it('state works without callback', () => {
     const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
     const instance = chocolateManufacturerFactory
       .state({
         name: 'wonka',
       })
       .make();
-    expectTypeOf(instance.name as string).toBeString();
     expect(instance.name).toBe('wonka');
+  });
+
+  it('state attributes from define works', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instance = chocolateManufacturerFactory
+      .state(attributes => ({
+        tradeName: `${attributes.name ?? ''} company`,
+      }))
+      .make();
+    expect(instance.tradeName).toBe(`${COMPANY_NAME} company`);
+  });
+
+  it('state attributes from state works', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instance = chocolateManufacturerFactory
+      .state({
+        name: 'potato',
+      })
+      .state({
+        name: 'hersheys',
+      })
+      .state(attributes => ({
+        tradeName: `${attributes.name ?? ''} company`,
+      }))
+      .make();
+    expect(instance.tradeName).toBe(`hersheys company`);
+  });
+
+  it('make attributes works', () => {
+    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const instance = chocolateManufacturerFactory.make({
+      tradeName: 'hersheys company',
+    });
+    expect(instance.tradeName).toBe(`hersheys company`);
   });
 
   it('state works multiple times', () => {
@@ -42,10 +77,9 @@ describe('simple factory tests', () => {
         name: 'toblerone',
       }))
       .state(() => ({
-        name: 'hersheis',
+        name: 'hersheys',
       }))
       .make();
-    expectTypeOf(instance.name as string).toBeString();
-    expect(instance.name).toBe('hersheis');
+    expect(instance.name).toBe('hersheys');
   });
 });

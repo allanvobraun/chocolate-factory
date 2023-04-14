@@ -9,13 +9,16 @@ export function FactoryFor<Entity extends ObjectLiteral>(entity: EntityTarget<En
   };
 }
 
-type StateFn<T> = (attributes: Partial<T>) => Partial<T>;
+export type StateFn<T> = (attributes: Partial<T>) => Partial<T>;
 export abstract class Factory<T> {
   private states: StateFn<T>[] = [];
 
   protected abstract definition(): Partial<T>;
 
-  make(): Partial<T> {
+  make(state?: Partial<T>): Partial<T> {
+    if (state) {
+      return this.state(state).make();
+    }
     return this.getRawAttributes();
   }
 

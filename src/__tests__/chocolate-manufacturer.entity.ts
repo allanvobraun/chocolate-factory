@@ -4,8 +4,8 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
-  OneToMany,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ChocolateEntity } from './chocolate.entity';
@@ -23,6 +23,9 @@ export class ChocolateManufacturerEntity {
 
   @Column()
   name!: string;
+
+  @Column()
+  tradeName!: string;
 
   @OneToMany(() => ChocolateEntity, chocolate => chocolate.manufacturer)
   chocolates?: ChocolateEntity[];

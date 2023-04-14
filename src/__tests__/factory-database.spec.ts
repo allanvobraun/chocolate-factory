@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { Factory, FactoryFor } from 'src/factory';
 
-import { DataSource, DeepPartial, Repository } from 'typeorm';
-import { expect, it, describe, beforeAll } from 'vitest';
+import { DataSource, Repository } from 'typeorm';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { ChocolateManufacturerEntity } from './chocolate-manufacturer.entity';
 import { ChocolateEntity } from './chocolate.entity';
 
@@ -28,9 +27,8 @@ describe('database tests', () => {
   it('database works', async () => {
     const manufacturer = await chocolateManufacturerRepo.save({
       name: 'batata',
+      tradeName: 'batata company',
     });
-
-    console.log(manufacturer);
 
     expect(manufacturer.createdAt).toBeDefined();
   });
