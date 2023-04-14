@@ -1,6 +1,7 @@
 import 'reflect-metadata';
+import { Factory, FactoryFor } from 'src/factory';
 
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, DeepPartial, Repository } from 'typeorm';
 import { expect, it, describe, beforeAll } from 'vitest';
 import { ChocolateManufacturerEntity } from './chocolate-manufacturer.entity';
 import { ChocolateEntity } from './chocolate.entity';
@@ -32,9 +33,5 @@ describe('database tests', () => {
     console.log(manufacturer);
 
     expect(manufacturer.createdAt).toBeDefined();
-  });
-
-  it('aaaa', () => {
-    expect(1 + 1).toBe(2);
   });
 });
