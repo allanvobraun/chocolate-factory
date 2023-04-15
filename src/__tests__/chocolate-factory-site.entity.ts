@@ -25,8 +25,8 @@ export class ChocolateFactorySiteEntity {
   chocolates?: ChocolateEntity[];
 
   @CreateDateColumn()
-  createdAt!: string;
+  createdAt!: Date;
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: string;
+  deletedAt?: Date;
 }

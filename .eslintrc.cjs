@@ -24,6 +24,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     'import/newline-after-import': 'warn',
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
   },
   plugins: ['@typescript-eslint', 'import'],
   ignorePatterns: ['node_modules'],

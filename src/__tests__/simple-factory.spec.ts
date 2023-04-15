@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import 'reflect-metadata';
 
-import { describe, expect, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it, Mock, vi } from 'vitest';
 import {
   ChocolateFactorySiteFactory,
   COMPANY_NAME,
 } from './factories/chocolate-factory-site.factory';
 import { FactoryGuestFactory } from './factories/factory-guest.factory';
-import { FriendlyLevel } from './factory-guest.entity';
+import { FactoryGuestEntity, FriendlyLevel } from './factory-guest.entity';
 
 describe('simple factory tests', () => {
   it('make works', () => {
@@ -136,5 +136,32 @@ describe('simple factory tests', () => {
       weight: 100,
       friendlyLevel: FriendlyLevel.UNFRIENDLY,
     });
+  });
+
+  it('after making hook is called', () => {
+    let afterMakingCallbackSpy: Mock<[attributes: Partial<FactoryGuestEntity>], unknown> =
+      vi.fn();
+    vi.spyOn(FactoryGuestFactory.prototype, 'setAfterMaking').mockImplementation(
+      function (this: FactoryGuestFactory, fn) {
+        afterMakingCallbackSpy = vi.fn(fn);
+        this['afterMakingCallback'] = afterMakingCallbackSpy;
+      },
+    );
+    const verucaState = {
+      age: 8,
+      name: 'Veruca Salt',
+      friendlyLevel: FriendlyLevel.VERY_UNFRIENDLY,
+      weight: 35,
+    };
+
+    const chocolateGuestFactory = new FactoryGuestFactory();
+    chocolateGuestFactory.state(verucaState).make();
+    expect(afterMakingCallbackSpy).toHaveBeenLastCalledWith(verucaState);
+  });
+
+  it('after making hook can do side effects', () => {
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
+    const instance = chocolateManufacturerFactory.make();
+    expect(instance.createdAt).toBeDefined();
   });
 });

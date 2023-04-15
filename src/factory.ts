@@ -11,17 +11,26 @@ export function FactoryFor<Entity extends ObjectLiteral>(entity: EntityTarget<En
 }
 
 export type StateFn<T> = (attributes: Partial<T>) => Partial<T>;
+export type AfterMakingFn<T> = (attributes: Partial<T>) => unknown;
+
+export type DefinitionParams<T> = {
+  afterMaking: (hook: AfterMakingFn<T>) => void;
+};
+
 export abstract class Factory<T> {
   private states: StateFn<T>[] = [];
+  private afterMakingCallback: AfterMakingFn<T> = () => {};
 
-  protected abstract definition(): Partial<T>;
+  protected abstract definition(params?: DefinitionParams<T>): Partial<T>;
 
   make(state?: Partial<T>): Partial<T> {
     if (state) {
       return this.state(state).make();
     }
 
-    return this.getRawAttributes();
+    const obj = this.getRawAttributes();
+    this.afterMakingCallback(obj); // side efects
+    return obj;
   }
 
   makeMany(count: number, state?: Partial<T>): Partial<T>[] {
@@ -49,6 +58,16 @@ export abstract class Factory<T> {
         ...carry,
         ...result,
       };
-    }, this.definition());
+    }, this.callDefinition());
+  }
+
+  protected callDefinition(): Partial<T> {
+    return this.definition({
+      afterMaking: this.setAfterMaking.bind(this),
+    });
+  }
+
+  setAfterMaking(hook: AfterMakingFn<T>): void {
+    this.afterMakingCallback = hook;
   }
 }

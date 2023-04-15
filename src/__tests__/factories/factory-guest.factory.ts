@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Factory } from 'src/factory';
+import { DefinitionParams, Factory } from 'src/factory';
 import { FactoryGuestEntity, FriendlyLevel } from '../factory-guest.entity';
 
 export class FactoryGuestFactory extends Factory<FactoryGuestEntity> {
@@ -29,7 +29,13 @@ export class FactoryGuestFactory extends Factory<FactoryGuestEntity> {
     }));
   }
 
-  protected definition(): Partial<FactoryGuestEntity> {
+  protected definition({
+    afterMaking,
+  }: DefinitionParams<FactoryGuestEntity>): Partial<FactoryGuestEntity> {
+    afterMaking(() => {
+      // side efects
+    });
+
     return {
       name: faker.name.fullName(),
       friendlyLevel: faker.datatype.number({
