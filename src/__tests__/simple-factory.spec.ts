@@ -87,8 +87,7 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany works', () => {
-    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
-    const instances = chocolateManufacturerFactory
+    const instances = ChocolateFactorySiteFactory.new()
       .state(() => ({
         name: 'wonka',
       }))
@@ -106,8 +105,7 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany mantain randoness', () => {
-    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
-    const instances = chocolateManufacturerFactory
+    const instances = ChocolateFactorySiteFactory.new()
       .state(() => ({
         name: 'wonka ' + faker.random.alpha(4),
       }))
@@ -118,8 +116,7 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany state works', () => {
-    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
-    const instances = chocolateManufacturerFactory.makeMany(10, {
+    const instances = ChocolateFactorySiteFactory.new().makeMany(10, {
       name: 'wonka',
     });
     expect(instances).toHaveLength(10);
@@ -155,20 +152,17 @@ describe('simple factory tests', () => {
       weight: 35,
     };
 
-    const chocolateGuestFactory = new FactoryGuestFactory();
-    chocolateGuestFactory.state(verucaState).make();
+    FactoryGuestFactory.new().state(verucaState).make();
     expect(afterMakingCallbackSpy).toHaveBeenLastCalledWith(verucaState);
   });
 
   it('after making hook can do side effects', () => {
-    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
-    const instance = chocolateManufacturerFactory.make();
+    const instance = ChocolateFactorySiteFactory.new().make();
     expect(instance.createdAt).toBeDefined();
   });
 
   it('one sequence works', () => {
-    const chocolateGuestFactory = new FactoryGuestFactory();
-    const instance = chocolateGuestFactory.make();
+    const instance = FactoryGuestFactory.new().make();
     expect(instance.id).toBe(1);
   });
 

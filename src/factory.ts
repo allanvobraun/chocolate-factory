@@ -25,6 +25,10 @@ export abstract class Factory<T> {
 
   protected abstract definition(params?: DefinitionParams<T>): Partial<T>;
 
+  static new<T>(this: new () => Factory<T>) {
+    return new this();
+  }
+
   make(state?: Partial<T>): Partial<T> {
     if (state) {
       return this.state(state).make();
