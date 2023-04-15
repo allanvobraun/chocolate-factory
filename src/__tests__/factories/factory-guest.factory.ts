@@ -31,12 +31,14 @@ export class FactoryGuestFactory extends Factory<FactoryGuestEntity> {
 
   protected definition({
     afterMaking,
+    sequence,
   }: DefinitionParams<FactoryGuestEntity>): Partial<FactoryGuestEntity> {
     afterMaking(() => {
       // side efects
     });
 
     return {
+      id: sequence,
       name: faker.name.fullName(),
       friendlyLevel: faker.datatype.number({
         min: 1,

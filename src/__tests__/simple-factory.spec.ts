@@ -148,6 +148,7 @@ describe('simple factory tests', () => {
       },
     );
     const verucaState = {
+      id: 1,
       age: 8,
       name: 'Veruca Salt',
       friendlyLevel: FriendlyLevel.VERY_UNFRIENDLY,
@@ -163,5 +164,20 @@ describe('simple factory tests', () => {
     const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory.make();
     expect(instance.createdAt).toBeDefined();
+  });
+
+  it('one sequence works', () => {
+    const chocolateGuestFactory = new FactoryGuestFactory();
+    const instance = chocolateGuestFactory.make();
+    expect(instance.id).toBe(1);
+  });
+
+  it('multiple sequences works', () => {
+    const chocolateGuestFactory = new FactoryGuestFactory();
+    const instances = chocolateGuestFactory.makeMany(10);
+    for (let index = 0; index < instances.length; index++) {
+      const element = instances[index];
+      expect(element.id).toBe(index + 1);
+    }
   });
 });

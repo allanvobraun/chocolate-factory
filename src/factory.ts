@@ -15,9 +15,11 @@ export type AfterMakingFn<T> = (attributes: Partial<T>) => unknown;
 
 export type DefinitionParams<T> = {
   afterMaking: (hook: AfterMakingFn<T>) => void;
+  sequence: number;
 };
 
 export abstract class Factory<T> {
+  private sequenceCounter: number = 1;
   private states: StateFn<T>[] = [];
   private afterMakingCallback: AfterMakingFn<T> = () => {};
 
@@ -64,7 +66,12 @@ export abstract class Factory<T> {
   protected callDefinition(): Partial<T> {
     return this.definition({
       afterMaking: this.setAfterMaking.bind(this),
+      sequence: this.getSequence(),
     });
+  }
+
+  protected getSequence(): number {
+    return this.sequenceCounter++;
   }
 
   setAfterMaking(hook: AfterMakingFn<T>): void {
