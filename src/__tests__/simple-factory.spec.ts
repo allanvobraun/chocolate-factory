@@ -3,19 +3,21 @@ import 'reflect-metadata';
 
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import {
-  ChocolateManufacturerFactory,
+  ChocolateFactorySiteFactory,
   COMPANY_NAME,
-} from './chocolate-manufacturer.factory';
+} from './factories/chocolate-factory-site.factory';
+import { FactoryGuestFactory } from './factories/factory-guest.factory';
+import { FriendlyLevel } from './factory-guest.entity';
 
 describe('simple factory tests', () => {
   it('make works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory.make();
     expectTypeOf(instance.name as string).toBeString();
   });
 
   it('state works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory
       .state(() => ({
         name: 'wonka',
@@ -25,7 +27,7 @@ describe('simple factory tests', () => {
   });
 
   it('state works without callback', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory
       .state({
         name: 'wonka',
@@ -35,7 +37,7 @@ describe('simple factory tests', () => {
   });
 
   it('state attributes from define works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory
       .state(attributes => ({
         tradeName: `${attributes.name ?? ''} company`,
@@ -45,7 +47,7 @@ describe('simple factory tests', () => {
   });
 
   it('state attributes from state works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory
       .state({
         name: 'potato',
@@ -61,7 +63,7 @@ describe('simple factory tests', () => {
   });
 
   it('make attributes works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory.make({
       tradeName: 'hersheys company',
     });
@@ -69,7 +71,7 @@ describe('simple factory tests', () => {
   });
 
   it('state works multiple times', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instance = chocolateManufacturerFactory
       .state(() => ({
         name: 'wonka',
@@ -85,7 +87,7 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instances = chocolateManufacturerFactory
       .state(() => ({
         name: 'wonka',
@@ -104,7 +106,7 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany mantain randoness', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instances = chocolateManufacturerFactory
       .state(() => ({
         name: 'wonka ' + faker.random.alpha(4),
@@ -116,13 +118,23 @@ describe('simple factory tests', () => {
   });
 
   it('makeMany state works', () => {
-    const chocolateManufacturerFactory = new ChocolateManufacturerFactory();
+    const chocolateManufacturerFactory = new ChocolateFactorySiteFactory();
     const instances = chocolateManufacturerFactory.makeMany(10, {
       name: 'wonka',
     });
     expect(instances).toHaveLength(10);
     instances.forEach(instance => {
       expect(instance.name).toBe('wonka');
+    });
+  });
+
+  it('custom states works', () => {
+    const chocolateGuestFactory = new FactoryGuestFactory();
+    const instance = chocolateGuestFactory.overWeight().make();
+    expect(instance).toMatchObject({
+      name: 'Augustus Gloop',
+      weight: 100,
+      friendlyLevel: FriendlyLevel.UNFRIENDLY,
     });
   });
 });

@@ -10,14 +10,8 @@ import {
 } from 'typeorm';
 import { ChocolateEntity } from './chocolate.entity';
 
-export enum SugarLevel {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-}
-
-@Entity({ name: 'chocolate' })
-export class ChocolateManufacturerEntity {
+@Entity()
+export class ChocolateFactorySiteEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -27,7 +21,7 @@ export class ChocolateManufacturerEntity {
   @Column()
   tradeName!: string;
 
-  @OneToMany(() => ChocolateEntity, chocolate => chocolate.manufacturer)
+  @OneToMany(() => ChocolateEntity, chocolate => chocolate.factorySite)
   chocolates?: ChocolateEntity[];
 
   @CreateDateColumn()

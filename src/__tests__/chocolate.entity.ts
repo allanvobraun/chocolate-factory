@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { ChocolateManufacturerEntity } from './chocolate-manufacturer.entity';
+import { ChocolateFactorySiteEntity } from './chocolate-factory-site.entity';
 
 export enum SugarLevel {
   LOW = 'low',
@@ -29,9 +29,9 @@ export class ChocolateEntity {
   @Column({ type: 'text', default: SugarLevel.MEDIUM }) // We don't use enum type as it makes it easier when testing across different db drivers.
   sugarLevel!: SugarLevel;
 
-  @OneToOne(() => ChocolateManufacturerEntity, manufacturer => manufacturer.chocolates)
+  @OneToOne(() => ChocolateFactorySiteEntity, manufacturer => manufacturer.chocolates)
   @JoinColumn()
-  manufacturer!: ChocolateManufacturerEntity;
+  factorySite!: ChocolateFactorySiteEntity;
 
   @CreateDateColumn()
   createdAt!: string;

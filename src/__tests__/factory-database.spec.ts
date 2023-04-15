@@ -2,13 +2,12 @@ import 'reflect-metadata';
 
 import { DataSource, Repository } from 'typeorm';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ChocolateManufacturerEntity } from './chocolate-manufacturer.entity';
+import { ChocolateFactorySiteEntity } from './chocolate-factory-site.entity';
 import { ChocolateEntity } from './chocolate.entity';
 
 describe('database tests', () => {
   let dataSource: DataSource;
-  let chocolateRepo: Repository<ChocolateEntity>;
-  let chocolateManufacturerRepo: Repository<ChocolateManufacturerEntity>;
+  let chocolateManufacturerRepo: Repository<ChocolateFactorySiteEntity>;
 
   beforeAll(async () => {
     dataSource = new DataSource({
@@ -16,12 +15,11 @@ describe('database tests', () => {
       database: ':memory:',
       synchronize: true,
       logging: false,
-      entities: [ChocolateEntity, ChocolateManufacturerEntity],
+      entities: [ChocolateEntity, ChocolateFactorySiteEntity],
     });
     await dataSource.initialize();
 
-    chocolateRepo = dataSource.getRepository(ChocolateEntity);
-    chocolateManufacturerRepo = dataSource.getRepository(ChocolateManufacturerEntity);
+    chocolateManufacturerRepo = dataSource.getRepository(ChocolateFactorySiteEntity);
   });
 
   it('database works', async () => {
